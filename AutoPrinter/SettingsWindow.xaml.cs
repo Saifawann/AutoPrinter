@@ -15,6 +15,8 @@ using AutoPrinter.Helpers;
 using System.Printing;
 using Microsoft.Win32;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 
 namespace AutoPrinter
@@ -157,6 +159,81 @@ namespace AutoPrinter
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading printers: {ex.Message}");
+            }
+        }
+        private void BtnPrinterSettings_Click(object sender, RoutedEventArgs e)
+        {
+            string selectedPrinter = CmbPrinters.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(selectedPrinter))
+            {
+                MessageBox.Show("Please select a printer first.", "No Printer Selected",
+                               MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                OpenPrinterProperties(selectedPrinter);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to open printer properties: {ex.Message}",
+                               "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Logger.Write($"Error opening printer properties for {selectedPrinter}: {ex.Message}");
+            }
+        }
+
+        [DllImport("winspool.drv", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool PrinterProperties(IntPtr hwnd, string pPrinterName);
+
+        private void OpenPrinterProperties(string printerName)
+        {
+            // Try Windows API first (most reliable)
+            if (!PrinterProperties(new System.Windows.Interop.WindowInteropHelper(this).Handle, printerName))
+            {
+                // Fallback: Try using rundll32
+                OpenPrinterPropertiesWithRundll32(printerName);
+            }
+        }
+
+        private void OpenPrinterPropertiesWithRundll32(string printerName)
+        {
+            try
+            {
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = "rundll32.exe",
+                    Arguments = $"printui.dll,PrintUIEntry /e /n \"{printerName}\"",
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+
+                Process.Start(startInfo);
+            }
+            catch (Exception ex)
+            {
+                // Final fallback: Open control panel printers
+                Logger.Write($"Rundll32 failed, opening control panel: {ex.Message}");
+                OpenControlPanelPrinters();
+            }
+        }
+
+        private void OpenControlPanelPrinters()
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "control",
+                    Arguments = "printers",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to open printer settings: {ex.Message}",
+                               "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
