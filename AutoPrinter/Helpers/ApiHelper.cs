@@ -10,7 +10,7 @@ namespace AutoPrinter.Helpers
     {
         private static readonly HttpClient client = new HttpClient();
 
-        public static async Task<LabelFile?> FetchLabelAsync(string apiUrl, string userPin)
+        public static async Task<LabelFile[]?> FetchAllLabelsAsync(string apiUrl, string userPin)
         {
             try
             {
@@ -18,43 +18,56 @@ namespace AutoPrinter.Helpers
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                var doc = JsonDocument.Parse(json);
 
-                // Case: files array returned
+                using var doc = JsonDocument.Parse(json);
+
                 if (doc.RootElement.TryGetProperty("files", out JsonElement filesElement) &&
                     filesElement.ValueKind == JsonValueKind.Array &&
                     filesElement.GetArrayLength() > 0)
                 {
-                    var firstFile = filesElement[0];
-                    string base64 = firstFile[0].GetString();
-                    string fileName = firstFile[1].GetString();
+                    var labels = new List<LabelFile>();
 
-                    if (!string.IsNullOrWhiteSpace(base64) && !string.IsNullOrWhiteSpace(fileName))
+                    foreach (var fileEntry in filesElement.EnumerateArray())
                     {
-                        return new LabelFile
+                        if (fileEntry.ValueKind == JsonValueKind.Array && fileEntry.GetArrayLength() >= 2)
                         {
-                            Data = Convert.FromBase64String(base64),
-                            FileName = fileName.EndsWith(".pdf") ? fileName : $"{fileName}.pdf"
-                        };
+                            string? base64 = fileEntry[0].GetString();
+                            string? fileName = fileEntry[1].GetString();
+
+                            if (!string.IsNullOrWhiteSpace(base64) && !string.IsNullOrWhiteSpace(fileName))
+                            {
+                                labels.Add(new LabelFile
+                                {
+                                    Data = Convert.FromBase64String(base64),
+                                    FileName = fileName.EndsWith(".pdf") ? fileName : $"{fileName}.pdf"
+                                });
+                            }
+                        }
                     }
+
+                    if (labels.Count > 0)
+                        return labels.ToArray();
                 }
 
-                // Fallback: message or empty files
+                // Log API message or unexpected response
                 if (doc.RootElement.TryGetProperty("message", out JsonElement messageElement))
                 {
                     Logger.Write($"API message: {messageElement.GetString()}");
-                    return null;
+                }
+                else
+                {
+                    Logger.Write("API returned no files or unexpected response.");
                 }
 
-                Logger.Write("API returned unexpected response.");
                 return null;
             }
             catch (Exception ex)
             {
-                Logger.Write($"API error: {ex.Message}");
+                Logger.Write($"API error: {ex}");
                 return null;
             }
         }
+
 
 
     }

@@ -10,10 +10,11 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using AutoPrinter.Models;
 using AutoPrinter.Helpers;
 using System.Printing;
+using Microsoft.Win32;
+using System.IO;
 
 
 namespace AutoPrinter
@@ -42,6 +43,7 @@ namespace AutoPrinter
             TxtPathToSavePdf.Text = settings.PathToSavePdf;
 
             // === API ===
+            DurationBox.Text = settings.PollingDurationSeconds.ToString();
             UrlBox.Text = settings.ApiUrl;
             PinBox.Password = settings.UserPin;
 
@@ -60,6 +62,19 @@ namespace AutoPrinter
 
         private void BrowseFolder_Click(object sender, RoutedEventArgs e)
         {
+            var dialog = new OpenFileDialog();
+            dialog.CheckFileExists = false; // allow selecting non-existent file
+            dialog.FileName = "Select folder"; // placeholder name
+            dialog.ValidateNames = false;    // ignore file name validation
+            dialog.Title = "Select folder to save PDF";
+
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                // Get the folder path from the selected "file"
+                string folderPath = Path.GetDirectoryName(dialog.FileName);
+                TxtPathToSavePdf.Text = folderPath;
+            }
         }
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -69,6 +84,7 @@ namespace AutoPrinter
             settings.PathToSavePdf = TxtPathToSavePdf.Text;
 
             // === API ===
+            settings.PollingDurationSeconds = GetCurrentPollingDuration();
             settings.ApiUrl = UrlBox.Text;
             settings.UserPin = PinBox.Password;
 
@@ -88,8 +104,22 @@ namespace AutoPrinter
             SettingsManager.Save(settings);
             AutoPrinter.Helpers.Logger.Write("Settings updated successfully.");
 
-            MessageBox.Show("Settings saved successfully!", "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (Owner is MainWindow mainWindow)
+            {
+                mainWindow.OnSettingsUpdated(settings); // Pass the updated settings
+            }
+
+
             this.Close();
+        }
+
+        private int GetCurrentPollingDuration()
+        {
+            if (int.TryParse(DurationBox.Text, out int duration) && duration > 0)
+            {
+                return duration;
+            }
+            return 30; // Default fallback
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
