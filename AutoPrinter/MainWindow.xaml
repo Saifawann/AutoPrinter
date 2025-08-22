@@ -18,26 +18,22 @@
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar -->
-        <DockPanel Grid.Column="0" Background="#2d2d30" LastChildFill="True">
+        <DockPanel Grid.Column="0" LastChildFill="False">
 
             <!-- Pause/Resume Button -->
             <Button x:Name="PauseResumeBtn"
                     Content="Pause"
                     Margin="10"
                     Height="40"
-                    Foreground="White"
-                    Background="#3a3a3d"
                     DockPanel.Dock="Top"/>
 
-            <!-- Spacer to push settings button to bottom -->
-            <DockPanel DockPanel.Dock="Bottom" Margin="10">
-                <Button x:Name="SettingsBtn"
-                        Content="⚙ Settings"
-                        Height="40"
-                        Foreground="White"
-                        Background="#3a3a3d"
-                        Click="BtnSettings_Click"/>
-            </DockPanel>
+            <Button x:Name="SettingsBtn"
+                    Content="⚙ Settings"
+                    Margin="10"
+                    Height="40"
+                    Click="BtnSettings_Click"
+                    DockPanel.Dock="Bottom"
+                    />
         </DockPanel>
 
         <!-- Main Content -->

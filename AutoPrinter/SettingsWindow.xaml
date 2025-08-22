@@ -35,7 +35,7 @@
                         <TextBox x:Name="TxtPathToSavePdf"
                                  Width="350"
                                  Margin="0,0,10,0"
-                                 IsEnabled="False"/>
+                                 IsEnabled="True"/>
                         <Button Content="Browse..."
                                 Width="100"
                                 Click="BrowseFolder_Click"/>
@@ -56,7 +56,9 @@
                                    VerticalAlignment="Center"/>
                         <TextBox x:Name="UrlBox" 
                                  Grid.Column="1" 
-                                 Margin="5,0,0,0"/>
+                                 Margin="5,0,0,0"
+                                 IsEnabled="False"
+                                 />
                     </Grid>
 
                     <Grid Margin="0,0,0,10">

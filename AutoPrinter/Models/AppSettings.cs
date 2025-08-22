@@ -8,7 +8,7 @@
         public string PathToSavePdf { get; set; } = "";
 
         // API
-        public string ApiUrl { get; set; } = "";
+        public string ApiUrl { get; set; } = "https://beta.channeldispatch.co.uk/api/v1/download_file";
         public string UserPin { get; set; } = "";
 
         // Printing
