@@ -15,7 +15,7 @@ namespace AutoPrinter
         private System.Timers.Timer apiTimer;
         private AppSettings settings;
         private bool isPollingPaused = false;
-        private const int MAX_LOG_LINES = 1000; // Limit lines to prevent memory issues
+        private const int MAX_LOG_LINES = 10000; // Limit lines to prevent memory issues
         private readonly Queue<string> logLines = new Queue<string>();
 
 
@@ -189,7 +189,6 @@ namespace AutoPrinter
             }
         }
 
-        // In your MainWindow - add this method
         public void OnSettingsUpdated(AppSettings updatedSettings)
         {
             // Update the local settings object
@@ -213,19 +212,27 @@ namespace AutoPrinter
 
             if (isPollingPaused)
             {
-                // Resume polling
+                // Resume polling - Change to Pause state
                 apiTimer.Start();
                 PauseResumeText.Text = "Pause";
                 PauseResumeIcon.Text = "⏸"; // Pause icon
+
+                PauseIconBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fef3c7")); // Light amber background
+                PauseResumeIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f59e0b")); // Amber icon
+
                 Logger.Write("Polling resumed.");
                 isPollingPaused = false;
             }
             else
             {
-                // Pause polling
                 apiTimer.Stop();
                 PauseResumeText.Text = "Resume";
                 PauseResumeIcon.Text = "▶"; // Play icon
+
+                // Change colors to green (resume state)
+                PauseIconBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#dcfce7")); // Light green background
+                PauseResumeIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#16a34a")); // Green icon
+
                 Logger.Write("Polling paused.");
                 isPollingPaused = true;
             }

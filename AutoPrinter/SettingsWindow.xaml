@@ -5,164 +5,557 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoPrinter"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="650"
-        WindowStartupLocation="CenterScreen">
+        Title="Settings" Height="500" Width="700"
+        WindowStartupLocation="CenterScreen"
+        Background="#f8fafc">
+
+    <Window.Resources>
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="BorderBrush" Value="#e2e8f0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#000000" 
+                                                Opacity="0.06" 
+                                                ShadowDepth="1" 
+                                                BlurRadius="4" 
+                                                Direction="270"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#f8fafc"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#cbd5e1"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#f1f5f9"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#94a3b8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primary Button Style -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#3b82f6"/>
+            <Setter Property="BorderBrush" Value="#3b82f6"/>
+            <Setter Property="Foreground" Value="#ffffff"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#3b82f6" 
+                                                Opacity="0.2" 
+                                                ShadowDepth="1" 
+                                                BlurRadius="4" 
+                                                Direction="270"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#2563eb"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#2563eb"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1d4ed8"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#1d4ed8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern TextBox Style -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="BorderBrush" Value="#d1d5db"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                        Focusable="false" 
+                                        HorizontalScrollBarVisibility="Hidden" 
+                                        VerticalScrollBarVisibility="Hidden"
+                                        Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#9ca3af"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#3b82f6"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ComboBox Style -->
+        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="BorderBrush" Value="#d1d5db"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="Height" Value="36"/>
+        </Style>
+
+        <!-- Modern GroupBox Style -->
+        <Style x:Key="ModernGroupBoxStyle" TargetType="GroupBox">
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0"
+                                    Background="#f9fafb"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1,1,1,0"
+                                    CornerRadius="8,8,0,0"
+                                    Padding="12,8">
+                                <ContentPresenter ContentSource="Header"
+                                                TextBlock.FontWeight="SemiBold"
+                                                TextBlock.FontSize="13"
+                                                TextBlock.Foreground="#374151"/>
+                            </Border>
+                            <Border Grid.Row="1"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1,0,1,1"
+                                    CornerRadius="0,0,8,8"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern TabControl Style -->
+        <Style x:Key="ModernTabControlStyle" TargetType="TabControl">
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <!-- Modern TabItem Style -->
+        <Style x:Key="ModernTabItemStyle" TargetType="TabItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Margin" Value="0,0,2,0"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#6b7280"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8,8,0,0"
+                                Margin="{TemplateBinding Margin}">
+                            <ContentPresenter x:Name="contentPresenter"
+                                            ContentSource="Header"
+                                            Focusable="False"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#f8fafc"/>
+                                <Setter Property="Foreground" Value="#374151"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#ffffff"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#e5e7eb"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="1,1,1,0"/>
+                                <Setter Property="Foreground" Value="#111827"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="*"/>
             <!-- Tabs take most of the space -->
             <RowDefinition Height="Auto"/>
             <!-- Buttons at the bottom -->
         </Grid.RowDefinitions>
 
-        <!-- Tabs -->
-        <TabControl Grid.Row="0">
-            <!-- ================== GENERAL TAB ================== -->
-            <TabItem Header="General">
-                <StackPanel Margin="15">
-                    <CheckBox x:Name="DirectPrint"
-                              Content="Direct Print Label"
-                              Margin="0,0,0,10"/>
+        <!-- Main Content Area -->
+        <Border Grid.Row="0" 
+                Background="#ffffff" 
+                BorderBrush="#e5e7eb" 
+                BorderThickness="1,1,1,0"
+                >
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" Opacity="0.04" ShadowDepth="2" BlurRadius="8" Direction="270"/>
+            </Border.Effect>
 
-                    <CheckBox x:Name="ChkSaveToFolder"
-                              Content="Save PDF to Folder"
-                              Margin="0,0,0,10"/>
+            <!-- Tabs -->
+            <TabControl Style="{StaticResource ModernTabControlStyle}">
+                <!-- ================== GENERAL TAB ================== -->
+                <TabItem Header="General" Style="{StaticResource ModernTabItemStyle}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="32,24">
+                            <TextBlock Text="Label Settings" 
+                                     FontSize="18" 
+                                     FontWeight="SemiBold" 
+                                     Foreground="#111827" 
+                                     Margin="0,0,0,20"/>
 
-                    <TextBlock Text="Select Path to save labels:"
-                               Margin="0,0,0,5"/>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox x:Name="TxtPathToSavePdf"
-                                 Width="350"
-                                 Margin="0,0,10,0"
-                                 IsEnabled="True"/>
-                        <Button Content="Browse..."
-                                Width="100"
-                                Click="BrowseFolder_Click"/>
-                    </StackPanel>
-                </StackPanel>
-            </TabItem>
+                            <CheckBox x:Name="DirectPrint"
+                                      Content="Direct Print Label"
+                                      FontSize="14"
+                                      Foreground="#374151"
+                                      Margin="0,0,0,16"/>
 
-            <!-- ================== API TAB ================== -->
-            <TabItem Header="API">
-                <StackPanel Margin="15">
+                            <CheckBox x:Name="ChkSaveToFolder"
+                                      Content="Save PDF to Folder"
+                                      FontSize="14"
+                                      Foreground="#374151"
+                                      Margin="0,0,0,20"/>
 
-                    <Grid Margin="0,0,0,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="60"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Polling Duration:" 
-                       VerticalAlignment="Center"/>
-
-                        <TextBox x:Name="DurationBox" 
-                            Grid.Column="1" 
-                            Margin="5,0,5,0"/>
-
-                        <TextBlock Text="seconds" 
-                           Grid.Column="2" 
-                           VerticalAlignment="Center"
-                           Margin="5,0,0,0"/>
-                    </Grid>
-
-                    <Grid Margin="0,0,0,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Text="API URL:" 
-                                   VerticalAlignment="Center"/>
-                        <TextBox x:Name="UrlBox" 
-                                 Grid.Column="1" 
-                                 Margin="5,0,0,0"
-                                 IsEnabled="False"
-                                 />
-                    </Grid>
-
-                    <Grid Margin="0,0,0,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Text="User PIN:" 
-                                   VerticalAlignment="Center"/>
-                        <PasswordBox x:Name="PinBox" 
-                                     Grid.Column="1" 
-                                     Margin="5,0,0,0"/>
-                    </Grid>
-                </StackPanel>
-            </TabItem>
-
-            <!-- ================== PRINTING TAB ================== -->
-            <TabItem Header="Printing" Height="20" VerticalAlignment="Top">
-                <StackPanel Margin="15" Orientation="Vertical">
-                    <!-- Select Printer -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Select printer:" 
-                                   Width="150" 
-                                   VerticalAlignment="Center"/>
-                        <ComboBox x:Name="CmbPrinters" Width="300" Margin="0,0,10,0"/>
-                        <Button Content="Settings" Width="90" Click="BtnPrinterSettings_Click"/>
-                    </StackPanel>
-
-                    <!-- Page Range -->
-                    <GroupBox Header="Page Range" Margin="0,0,0,10">
-                        <StackPanel Orientation="Horizontal" Margin="10,5">
-                            <RadioButton x:Name="RbPrintAll" Content="Print all pages" IsChecked="True" Margin="0,0,20,0"/>
-                            <RadioButton x:Name="RbPrintRange" Content="Pages:" Margin="0,0,5,0"/>
-                            <TextBox x:Name="TxtPagesToPrint" Width="100" IsEnabled="False"/>
+                            <TextBlock Text="Select Path to save labels:"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       Foreground="#374151"
+                                       Margin="0,0,0,8"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="TxtPathToSavePdf"
+                                         Grid.Column="0"
+                                         Style="{StaticResource ModernTextBoxStyle}"
+                                         Margin="0,0,12,0"
+                                         IsEnabled="True"/>
+                                <Button Grid.Column="1"
+                                        Content="Browse..."
+                                        Style="{StaticResource ModernButtonStyle}"
+                                        Width="100"
+                                        Click="BrowseFolder_Click"/>
+                            </Grid>
                         </StackPanel>
-                    </GroupBox>
+                    </ScrollViewer>
+                </TabItem>
 
-                    <!-- Copies -->
-                    <GroupBox Header="Copies" Margin="0,0,0,10">
-                        <StackPanel Orientation="Horizontal" Margin="10,5">
-                            <TextBlock Text="Number:" Width="100" VerticalAlignment="Center"/>
-                            <TextBox x:Name="TxtCopies" Width="50" Text="1" Margin="0,0,20,0"/>
+                <!-- ================== API TAB ================== -->
+                <TabItem Header="API" Style="{StaticResource ModernTabItemStyle}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="32,24">
+                            <TextBlock Text="API Configuration" 
+                                     FontSize="18" 
+                                     FontWeight="SemiBold" 
+                                     Foreground="#111827" 
+                                     Margin="0,0,0,20"/>
 
-                            <TextBlock Text="Collation:" Width="100" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="CmbCollation" Width="150">
-                                <ComboBoxItem Content="By documents"/>
-                                <ComboBoxItem Content="None"/>
-                            </ComboBox>
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="80"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Polling Duration:" 
+                                         FontSize="14"
+                                         FontWeight="Medium"
+                                         Foreground="#374151"
+                                         VerticalAlignment="Center"/>
+
+                                <TextBox x:Name="DurationBox" 
+                                        Grid.Column="1" 
+                                        Style="{StaticResource ModernTextBoxStyle}"
+                                        Margin="12,0"/>
+
+                                <TextBlock Text="seconds" 
+                                         Grid.Column="2" 
+                                         FontSize="13"
+                                         Foreground="#6b7280"
+                                         VerticalAlignment="Center"
+                                         Margin="8,0,0,0"/>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="API URL:" 
+                                         FontSize="14"
+                                         FontWeight="Medium"
+                                         Foreground="#374151"
+                                         VerticalAlignment="Center"/>
+                                <TextBox x:Name="UrlBox" 
+                                         Grid.Column="1" 
+                                         Style="{StaticResource ModernTextBoxStyle}"
+                                         Margin="12,0,0,0"
+                                         IsEnabled="False"
+                                         Background="#f9fafb"/>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="User PIN:" 
+                                         FontSize="14"
+                                         FontWeight="Medium"
+                                         Foreground="#374151"
+                                         VerticalAlignment="Center"/>
+                                <PasswordBox x:Name="PinBox" 
+                                           Grid.Column="1" 
+                                           Background="#ffffff"
+                                           BorderBrush="#d1d5db"
+                                           BorderThickness="1"
+                                           Padding="10,8"
+                                           FontSize="13"
+                                           Margin="12,0,0,0"/>
+                            </Grid>
                         </StackPanel>
-                    </GroupBox>
+                    </ScrollViewer>
+                </TabItem>
 
-                    <!-- Page scaling -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Page scaling:" Width="150" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="CmbScaling" Width="200" Margin="0,0,20,0">
-                            <ComboBoxItem Content="Scale to fit"/>
-                            <ComboBoxItem Content="Actual size"/>
-                            <ComboBoxItem Content="Shrink oversized pages"/>
-                        </ComboBox>
-                        <CheckBox x:Name="ChkAutoPortrait" Content="Auto Portrait/Landscape"/>
-                    </StackPanel>
+                <!-- ================== PRINTING TAB ================== -->
+                <TabItem Header="Printing" Style="{StaticResource ModernTabItemStyle}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="32,24">
+                            <TextBlock Text="Print Configuration" 
+                                     FontSize="18" 
+                                     FontWeight="SemiBold" 
+                                     Foreground="#111827" 
+                                     Margin="0,0,0,20"/>
 
-                    <!-- Email attachments -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="E-mail attachments:" Width="150" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="CmbEmailAttach" Width="200">
-                            <ComboBoxItem Content="Ignore"/>
-                            <ComboBoxItem Content="Include"/>
-                            <ComboBoxItem Content="Prompt"/>
-                        </ComboBox>
-                    </StackPanel>
+                            <!-- Select Printer -->
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Select printer:" 
+                                         FontSize="14"
+                                         FontWeight="Medium"
+                                         Foreground="#374151"
+                                         VerticalAlignment="Center"/>
+                                <ComboBox x:Name="CmbPrinters" 
+                                        Grid.Column="1"
+                                        Style="{StaticResource ModernComboBoxStyle}"
+                                        Margin="12,0"/>
+                                <Button Grid.Column="2"
+                                        Content="Settings" 
+                                        Style="{StaticResource ModernButtonStyle}"
+                                        Width="90" 
+                                        Click="BtnPrinterSettings_Click"/>
+                            </Grid>
 
-                    <!-- Cover page -->
-                    <CheckBox x:Name="ChkPrintCoverPage" Content="Print cover page"/>
-                </StackPanel>
-            </TabItem>
-        </TabControl>
+                            <!-- Page Range -->
+                            <GroupBox Header="Page Range" 
+                                    Style="{StaticResource ModernGroupBoxStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="RbPrintAll" 
+                                               Content="Print all pages" 
+                                               IsChecked="True" 
+                                               FontSize="14"
+                                               Foreground="#374151"
+                                               Margin="0,0,24,0"/>
+                                    <RadioButton x:Name="RbPrintRange" 
+                                               Content="Pages:" 
+                                               FontSize="14"
+                                               Foreground="#374151"
+                                               Margin="0,0,8,0"/>
+                                    <TextBox x:Name="TxtPagesToPrint" 
+                                           Style="{StaticResource ModernTextBoxStyle}"
+                                           Width="120" 
+                                           IsEnabled="False"/>
+                                </StackPanel>
+                            </GroupBox>
 
-        <!-- Save / Cancel Buttons -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" 
-                    HorizontalAlignment="Right" Margin="10">
-            <Button x:Name="BtnSave" Content="Save" Width="100" Margin="0,0,10,0" Click="BtnSave_Click"/>
-            <Button x:Name="BtnCancel" Content="Cancel" Width="100" Click="BtnCancel_Click"/>
-        </StackPanel>
+                            <!-- Copies -->
+                            <GroupBox Header="Copies" 
+                                    Style="{StaticResource ModernGroupBoxStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Number:" 
+                                             FontSize="14"
+                                             FontWeight="Medium"
+                                             Foreground="#374151"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,8,0"/>
+                                    <TextBox x:Name="TxtCopies" 
+                                           Grid.Column="1"
+                                           Style="{StaticResource ModernTextBoxStyle}"
+                                           Width="60" 
+                                           Text="1" 
+                                           Margin="0,0,24,0"/>
+
+                                    <TextBlock Text="Collation:" 
+                                             Grid.Column="2"
+                                             FontSize="14"
+                                             FontWeight="Medium"
+                                             Foreground="#374151"
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,8,0"/>
+                                    <ComboBox x:Name="CmbCollation" 
+                                            Grid.Column="3"
+                                            Style="{StaticResource ModernComboBoxStyle}"
+                                            Width="160">
+                                        <ComboBoxItem Content="By documents"/>
+                                        <ComboBoxItem Content="None"/>
+                                    </ComboBox>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- Page scaling -->
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="220"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Page scaling:" 
+                                         FontSize="14"
+                                         FontWeight="Medium"
+                                         Foreground="#374151"
+                                         VerticalAlignment="Center"/>
+                                <ComboBox x:Name="CmbScaling" 
+                                        Grid.Column="1"
+                                        Style="{StaticResource ModernComboBoxStyle}"
+                                        Margin="12,0">
+                                    <ComboBoxItem Content="Scale to fit"/>
+                                    <ComboBoxItem Content="Actual size"/>
+                                    <ComboBoxItem Content="Shrink oversized pages"/>
+                                </ComboBox>
+                                <CheckBox x:Name="ChkAutoPortrait" 
+                                        Grid.Column="2"
+                                        Content="Auto Portrait/Landscape"
+                                        FontSize="14"
+                                        Foreground="#374151"
+                                        VerticalAlignment="Center"
+                                        Margin="20,0,0,0"/>
+                            </Grid>
+
+                            <!-- Email attachments -->
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="220"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="E-mail attachments:" 
+                                         FontSize="14"
+                                         FontWeight="Medium"
+                                         Foreground="#374151"
+                                         VerticalAlignment="Center"/>
+                                <ComboBox x:Name="CmbEmailAttach" 
+                                        Grid.Column="1"
+                                        Style="{StaticResource ModernComboBoxStyle}"
+                                        Margin="12,0,0,0">
+                                    <ComboBoxItem Content="Ignore"/>
+                                    <ComboBoxItem Content="Include"/>
+                                    <ComboBoxItem Content="Prompt"/>
+                                </ComboBox>
+                            </Grid>
+
+                            <!-- Cover page -->
+                            <CheckBox x:Name="ChkPrintCoverPage" 
+                                    Content="Print cover page"
+                                    FontSize="14"
+                                    Foreground="#374151"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </Border>
+
+        <!-- Action Buttons -->
+        <Border Grid.Row="1" 
+                Background="#f8fafc" 
+                BorderBrush="#e5e7eb" 
+                BorderThickness="1,0,1,1"
+                Padding="24,16">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" Opacity="0.04" ShadowDepth="2" BlurRadius="8" Direction="270"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Right">
+                <Button x:Name="BtnCancel" 
+                        Content="Cancel" 
+                        Style="{StaticResource ModernButtonStyle}"
+                        Width="100" 
+                        Click="BtnCancel_Click"/>
+                <Button x:Name="BtnSave" 
+                        Content="Save Changes" 
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Width="120" 
+                        Click="BtnSave_Click"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
