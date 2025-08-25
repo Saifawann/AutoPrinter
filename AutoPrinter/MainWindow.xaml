@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AutoPrinter.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Auto Label Printer" Height="450" Width="800"
+        Title="Auto Label Printer" Height="600" Width="900"
         Background="#f8fafc"
         WindowStartupLocation="CenterScreen">
 
@@ -66,39 +66,28 @@
             </Setter>
         </Style>
 
-        <!-- Primary Button Style (for active states) -->
-        <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
-            <Setter Property="Background" Value="#3b82f6"/>
-            <Setter Property="BorderBrush" Value="#3b82f6"/>
+        <!-- Console ScrollBar Style -->
+        <Style x:Key="ConsoleScrollBarStyle" TargetType="ScrollBar">
+            <Setter Property="Width" Value="10"/>
+            <Setter Property="Background" Value="#1a1a1a"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" 
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="12"
-                                Padding="{TemplateBinding Padding}">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#3b82f6" 
-                                                Opacity="0.25" 
-                                                ShadowDepth="2" 
-                                                BlurRadius="8" 
-                                                Direction="270"/>
-                            </Border.Effect>
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#2563eb"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#2563eb"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1d4ed8"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#1d4ed8"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="#0c0c0c">
+                            <Track Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="#3a3a3a" 
+                                                        CornerRadius="2" 
+                                                        Margin="2,0"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -108,123 +97,232 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Top bar for buttons -->
             <RowDefinition Height="*"/>
-            <!-- Logs area -->
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 🔹 Modern Top Bar -->
+        <!-- Modern Top Bar -->
         <Border Grid.Row="0" Background="#ffffff" Padding="12,10" BorderBrush="#e2e8f0" BorderThickness="0,0,0,1">
             <Border.Effect>
                 <DropShadowEffect Color="#000000" Opacity="0.04" ShadowDepth="1" BlurRadius="4" Direction="270"/>
             </Border.Effect>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                <!-- Pause/Resume Button -->
-                <Button x:Name="PauseResumeBtn" 
-                        Click="PauseResumeBtn_Click" 
-                        Style="{StaticResource ModernButtonStyle}"
-                        Width="160">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Border x:Name="PauseIconBorder" 
-                                Width="32" Height="32" 
-                                CornerRadius="8" 
-                                Background="#fef3c7" 
-                                Margin="0,0,12,0">
-                            <TextBlock x:Name="PauseResumeIcon" 
-                                     Text="⏸" 
-                                     FontSize="16" 
-                                     Foreground="#f59e0b" 
-                                     HorizontalAlignment="Center" 
-                                     VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock x:Name="PauseResumeText" 
-                                     Text="Pause" 
-                                     FontSize="14" 
-                                     FontWeight="SemiBold"
-                                     Foreground="#1f2937"/>
-                            <TextBlock Text="Stop processing" 
-                                     FontSize="11" 
-                                     Foreground="#6b7280"/>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <!-- Pause/Resume Button -->
+                    <Button x:Name="PauseResumeBtn" 
+                            Click="PauseResumeBtn_Click" 
+                            Style="{StaticResource ModernButtonStyle}"
+                            Width="160">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Border x:Name="PauseIconBorder" 
+                                    Width="32" Height="32" 
+                                    CornerRadius="8" 
+                                    Background="#fef3c7" 
+                                    Margin="0,0,12,0">
+                                <TextBlock x:Name="PauseResumeIcon" 
+                                         Text="⏸" 
+                                         FontSize="16" 
+                                         Foreground="#f59e0b" 
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock x:Name="PauseResumeText" 
+                                         Text="Pause" 
+                                         FontSize="14" 
+                                         FontWeight="SemiBold"
+                                         Foreground="#1f2937"/>
+                                <TextBlock Text="Stop processing" 
+                                         FontSize="11" 
+                                         Foreground="#6b7280"/>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </Button>
+                    </Button>
 
-                <!-- Settings Button -->
-                <Button x:Name="SettingsBtn" 
-                        Click="BtnSettings_Click" 
-                        Style="{StaticResource ModernButtonStyle}"
-                        Width="160">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Border Width="32" Height="32" 
-                                CornerRadius="8" 
-                                Background="#e0f2fe" 
-                                Margin="0,0,12,0">
-                            <TextBlock Text="⚙" 
-                                     FontSize="16" 
-                                     Foreground="#0891b2" 
-                                     HorizontalAlignment="Center" 
-                                     VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="Settings" 
-                                     FontSize="14" 
-                                     FontWeight="SemiBold"
-                                     Foreground="#1f2937"/>
-                            <TextBlock Text="Configure app" 
-                                     FontSize="11" 
-                                     Foreground="#6b7280"/>
+                    <!-- Settings Button -->
+                    <Button x:Name="SettingsBtn" 
+                            Click="BtnSettings_Click" 
+                            Style="{StaticResource ModernButtonStyle}"
+                            Width="160">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Border Width="32" Height="32" 
+                                    CornerRadius="8" 
+                                    Background="#e0f2fe" 
+                                    Margin="0,0,12,0">
+                                <TextBlock Text="⚙" 
+                                         FontSize="16" 
+                                         Foreground="#0891b2" 
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Settings" 
+                                         FontSize="14" 
+                                         FontWeight="SemiBold"
+                                         Foreground="#1f2937"/>
+                                <TextBlock Text="Configure app" 
+                                         FontSize="11" 
+                                         Foreground="#6b7280"/>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </Button>
+                    </Button>
 
-            </StackPanel>
+                    <!-- Clear Log Button -->
+                    <Button x:Name="ClearLogsBtn" 
+                            Click="ClearLogsBtn_Click" 
+                            Style="{StaticResource ModernButtonStyle}"
+                            Width="140">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Border Width="32" Height="32" 
+                                    CornerRadius="8" 
+                                    Background="#fee2e2" 
+                                    Margin="0,0,12,0">
+                                <TextBlock Text="🗑" 
+                                         FontSize="14" 
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Clear" 
+                                         FontSize="14" 
+                                         FontWeight="SemiBold"
+                                         Foreground="#1f2937"/>
+                                <TextBlock Text="Clear logs" 
+                                         FontSize="11" 
+                                         Foreground="#6b7280"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Status Indicators -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <!-- Connection Status -->
+                    <Border Background="#f0fdf4" CornerRadius="6" Padding="8,4" Margin="4,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse x:Name="StatusIndicator" Width="8" Height="8" Fill="#22c55e" Margin="0,0,6,0"/>
+                            <TextBlock x:Name="StatusText" Text="Connected" FontSize="11" Foreground="#16a34a" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Last Poll Time -->
+                    <Border Background="#f0f9ff" CornerRadius="6" Padding="8,4" Margin="4,0">
+                        <TextBlock x:Name="LastPollText" Text="Last poll: Never" FontSize="11" Foreground="#0891b2" FontWeight="Medium"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
         </Border>
 
-        <!-- 🔹 Main Logs Area with Modern Styling -->
-        <Border Grid.Row="1" 
-
-                Background="#ffffff" 
-                BorderBrush="#e5e7eb" 
-                BorderThickness="1" 
-                Padding="10">
+        <!-- Console-Style Logs Area -->
+        <Border Grid.Row="1" Background="#1e1e1e" CornerRadius="8">
             <Border.Effect>
-                <DropShadowEffect Color="#000000" Opacity="0.04" ShadowDepth="2" BlurRadius="8" Direction="270"/>
+                <DropShadowEffect Color="#000000" Opacity="0.3" ShadowDepth="4" BlurRadius="10" Direction="270"/>
             </Border.Effect>
 
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="32"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Logs Header -->
-                <TextBlock Grid.Row="0" 
-                         Text="Activity Log" 
-                         FontSize="12" 
-                         FontWeight="SemiBold" 
-                         Foreground="#111827" 
-                         Margin="0,0,0,8"/>
+                <!-- Console Header Bar -->
+                <Border Grid.Row="0" Background="#2d2d2d" CornerRadius="8,8,0,0">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                            <TextBlock Text="▶" Foreground="#00e676" FontSize="10" Margin="0,0,8,0"/>
+                            <TextBlock Text="AutoPrinter Console" 
+                                     Foreground="#808080" 
+                                     FontFamily="Consolas" 
+                                     FontSize="12" 
+                                     VerticalAlignment="Center"/>
+                        </StackPanel>
 
-                <!-- Logs Content -->
-                <Border Grid.Row="1" 
-                        Background="#f9fafb" 
-                        CornerRadius="6" 
-                        BorderBrush="#e5e7eb" 
-                        BorderThickness="1">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
-                        <TextBox x:Name="TxtLogs"
-                                 IsReadOnly="True"
-                                 TextWrapping="Wrap"
-                                 AcceptsReturn="True"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 FontFamily="Consolas, Monaco, 'Courier New', monospace"
-                                 FontSize="13"
-                                 Foreground="#374151"
-                                 />
+                        <!-- Terminal Window Controls -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
+                            <Border Width="12" Height="12" Background="#ff5f56" CornerRadius="6" Margin="3,0"/>
+                            <Border Width="12" Height="12" Background="#ffbd2e" CornerRadius="6" Margin="3,0"/>
+                            <Border Width="12" Height="12" Background="#27c93f" CornerRadius="6" Margin="3,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Console Content -->
+                <Grid Grid.Row="1" Background="#0c0c0c">
+                    <ScrollViewer x:Name="LogScrollViewer" 
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  Padding="0">
+                        <ScrollViewer.Resources>
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource ConsoleScrollBarStyle}"/>
+                        </ScrollViewer.Resources>
+
+                        <RichTextBox x:Name="ConsoleOutput" 
+                                     Background="#0c0c0c"
+                                     Foreground="#cccccc"
+                                     FontFamily="Cascadia Code, Consolas, 'Courier New', monospace"
+                                     FontSize="12"
+                                     BorderThickness="0"
+                                     Padding="15,10"
+                                     IsReadOnly="True"
+                                     IsDocumentEnabled="True">
+                            <RichTextBox.Resources>
+                                <Style TargetType="Paragraph">
+                                    <Setter Property="Margin" Value="0,0,0,2"/>
+                                    <Setter Property="LineHeight" Value="18"/>
+                                </Style>
+                            </RichTextBox.Resources>
+
+                            <FlowDocument  PageWidth="{Binding ActualWidth, ElementName=ConsoleOutput}">
+                                <Paragraph>
+                                    <Run Text="AutoPrinter Console v1.0.0" Foreground="#00e676" FontWeight="Bold"/>
+                                    <LineBreak/>
+                                    <Run Text="Initializing..." Foreground="#808080" FontSize="11"/>
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
                     </ScrollViewer>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#1a1a1a" Height="24">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Status -->
+                <Border Grid.Column="0" Padding="8,0" BorderBrush="#333" BorderThickness="0,0,1,0">
+                    <TextBlock x:Name="BottomStatusText" Text="Ready" Foreground="#808080" FontFamily="Consolas" FontSize="11" VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Line Count -->
+                <Border Grid.Column="1" Padding="8,0" BorderBrush="#333" BorderThickness="0,0,1,0">
+                    <TextBlock x:Name="LineCountText" Text="Lines: 0" Foreground="#808080" FontFamily="Consolas" FontSize="11" VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Spacer -->
+                <Border Grid.Column="2"/>
+
+                <!-- Memory Usage -->
+                <Border Grid.Column="3" Padding="8,0" BorderBrush="#333" BorderThickness="1,0,0,0">
+                    <TextBlock x:Name="MemoryText" Text="Memory: 0 MB" Foreground="#808080" FontFamily="Consolas" FontSize="11" VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Time -->
+                <Border Grid.Column="4" Padding="8,0">
+                    <TextBlock x:Name="TimeText" Text="00:00:00" Foreground="#808080" FontFamily="Consolas" FontSize="11" VerticalAlignment="Center"/>
                 </Border>
             </Grid>
         </Border>

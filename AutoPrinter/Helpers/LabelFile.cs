@@ -2,7 +2,8 @@
 {
     public class LabelFile
     {
-        public byte[] Data { get; set; } = Array.Empty<byte>();
-        public string FileName { get; set; } = string.Empty;
+        public byte[] Data { get; set; }
+        public string FileName { get; set; }
+        public string? Id { get; set; } // Add ID tracking if API provides it
     }
 }

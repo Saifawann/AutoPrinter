@@ -13,4 +13,9 @@
     <Content Include="printer_5413202.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PDFsharp" Version="6.2.1" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.8" />
+  </ItemGroup>
+
 </Project>
