@@ -111,15 +111,15 @@ namespace AutoPrinter.Helpers
                 string json = await response.Content.ReadAsStringAsync();
 
                 // Debug: Log full response for debugging (comment out in production)
-                if (json.Length > 0)
-                {
-                    // Log first 500 chars to see structure
-                    var preview = json.Length > 500 ? json.Substring(0, 500) + "..." : json;
-                    Logger.Write($"API Response preview: {preview}");
+                //if (json.Length > 0)
+                //{
+                //    // Log first 500 chars to see structure
+                //    var preview = json.Length > 500 ? json.Substring(0, 500) + "..." : json;
+                //    Logger.Write($"API Response preview: {preview}");
 
-                    // Also log total response size
-                    Logger.Write($"Total response size: {json.Length} characters");
-                }
+                //    // Also log total response size
+                //    Logger.Write($"Total response size: {json.Length} characters");
+                //}
 
                 using var doc = JsonDocument.Parse(json);
 
