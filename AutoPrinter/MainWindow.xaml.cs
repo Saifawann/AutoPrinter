@@ -217,8 +217,8 @@ namespace AutoPrinter
             };
 
             string header = @"╔══════════════════════════════════════════════════════════╗
-                              ║          AutoPrinter - Label Processing System           ║
-                              ╚══════════════════════════════════════════════════════════╝";
+║          AutoPrinter - Label Processing System           ║
+╚══════════════════════════════════════════════════════════╝";
 
             headerPara.Inlines.Add(new Run(header)
             {
@@ -755,8 +755,6 @@ namespace AutoPrinter
             apiTimer?.Stop();
             apiTimer?.Dispose();
 
-            // Cleanup
-            PrintHelper.Cleanup();
             Logger.LogWritten -= OnLogWritten;
 
             if (_scrollViewer != null)
