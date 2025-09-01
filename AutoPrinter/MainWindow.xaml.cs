@@ -622,7 +622,8 @@ namespace AutoPrinter
                     {
                         try
                         {
-                            PrintHelper.PrintPdf(labelFile.Data, settings.SelectedPrinter);
+                            byte[] pdfBytes = PdfHelper.ConvertToPdfBytes(labelFile.Data);
+                            PrintHelper.PrintPdf(pdfBytes, settings.SelectedPrinter);
                             WriteConsoleLineColored($"Printed: {labelFile.FileName} → {settings.SelectedPrinter}",
                                 LogLevel.Success);
                         }

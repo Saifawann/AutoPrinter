@@ -124,6 +124,76 @@ namespace AutoPrinter.Helpers
             }
         }
 
+        // Add this method to your existing PdfHelper class:
+
+        public static byte[] ConvertToPdfBytes(byte[] fileBytes)
+        {
+            // If already PDF, return as-is
+            string fileType = DetectFileType(fileBytes);
+
+            if (fileType == "pdf")
+            {
+                return fileBytes;
+            }
+
+            // If it's an image, convert to PDF
+            if (fileType == "png" || fileType == "jpeg" || fileType == "gif" || fileType == "bmp" || fileType == "tiff")
+            {
+                using (var imageStream = new MemoryStream(fileBytes))
+                using (var img = Image.FromStream(imageStream))
+                {
+                    var doc = new PdfDocument();
+                    var page = doc.AddPage();
+
+                    // Standard A4 dimensions
+                    double maxWidth = 595;
+                    double maxHeight = 842;
+
+                    double imgWidth = img.Width;
+                    double imgHeight = img.Height;
+
+                    // Calculate scaling
+                    double scaleX = maxWidth / imgWidth;
+                    double scaleY = maxHeight / imgHeight;
+                    double scale = Math.Min(scaleX, scaleY);
+
+                    if (scale > 1)
+                    {
+                        page.Width = imgWidth;
+                        page.Height = imgHeight;
+                    }
+                    else
+                    {
+                        page.Width = maxWidth;
+                        page.Height = maxHeight;
+                        imgWidth *= scale;
+                        imgHeight *= scale;
+                    }
+
+                    using (var gfx = XGraphics.FromPdfPage(page))
+                    using (var xImgStream = new MemoryStream(fileBytes))
+                    using (var xImg = XImage.FromStream(xImgStream))
+                    {
+                        double x = (page.Width - imgWidth) / 2;
+                        double y = (page.Height - imgHeight) / 2;
+
+                        gfx.DrawImage(xImg, x, y, imgWidth, imgHeight);
+                    }
+
+                    using (var pdfStream = new MemoryStream())
+                    {
+                        doc.Save(pdfStream);
+                        Logger.Write($"Converted {fileType} to PDF for printing");
+                        return pdfStream.ToArray();
+                    }
+                }
+            }
+
+            // Unknown type, return as-is and hope for the best
+            Logger.Write($"Warning: Unknown file type, returning original bytes");
+            return fileBytes;
+        }
+
         private static string GetUniqueFilePath(string folderPath, string fileName, int fileSize)
         {
             string nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
